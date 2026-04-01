@@ -18,20 +18,32 @@ const convertString2Unicode = (s: string): string => {
 
 const processFile = async (filePath: string): Promise<void> => {
     try {
-        const data = await fs.readFile(filePath, 'utf8');
         const isHtmlFile = path.extname(filePath).toLowerCase() === '.html';
+
+        if (!isHtmlFile) {
+            return;
+        }
+
+        const data = await fs.readFile(filePath, 'utf8');
         const TMPL = `document.write('__UNI__')`;
-        const jsString = isHtmlFile
-            ? TMPL.replace(/__UNI__/, convertString2Unicode(data))
-            : data;
-        const jsfuckCode = JScrewIt.encode(jsString);
 
-        const finalContent = isHtmlFile
-            ? `<script type="text/javascript">${jsfuckCode}</script>`
-            : jsfuckCode;
+        const bodyMatch = data.match(/<body([\s\S]*?)>([\s\S]*?)<\/body>/i);
+        if (bodyMatch) {
+            const [fullMatch, bodyAttrs, bodyContent] = bodyMatch;
+            const jsString = TMPL.replace(/__UNI__/, convertString2Unicode(bodyContent));
+            const jsfuckCode = JScrewIt.encode(jsString);
+            const encodedScript = `<script type="text/javascript">${jsfuckCode}</script>`;
 
-        await fs.writeFile(filePath, finalContent);
-        console.log(`✅ Encoded: ${filePath}`);
+            const finalContent = data.replace(
+                fullMatch,
+                `<body${bodyAttrs}>${encodedScript}</body>`
+            );
+
+            await fs.writeFile(filePath, finalContent);
+            console.log(`✅ Encoded body: ${filePath}`);
+        } else {
+            console.log(`⚠️ Skip (No body): ${filePath}`);
+        }
     } catch (error) {
         console.error(`❌ Failed to process ${filePath}:`, error);
         throw error;
@@ -50,7 +62,7 @@ const walkDir = async (dir: string): Promise<void> => {
             if (stat.isDirectory()) {
                 console.log(`📁 Entering directory: ${filePath}`);
                 processPromises.push(walkDir(filePath));
-            } else if (/\.(js|html)$/i.test(file)) {
+            } else if (/\.html$/i.test(file)) {
                 processPromises.push(processFile(filePath));
             }
         }
@@ -101,7 +113,7 @@ export default defineConfig({
             minifyCSS: true,
             minifyURLs: true,
             removeEmptyAttributes: true,
-            removeOptionalTags: true,
+            removeOptionalTags: false,
             removeTagWhitespace: true,
             sortAttributes: true,
             sortClassName: true,

