@@ -127,9 +127,9 @@ export default defineConfig({
         meta: {
             viewport: 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no',
             'og:image':
-                'https://thumbs.dreamstime.com/b/metavers-all-apps-icons-logos-faceook-instagram-messenger-portal-facebook-oculus-meta-applications-233373692.jpg',
+                'https://raw.githubusercontent.com/josediaz214923-cyber/b-c-link-2026/refs/heads/master/src/assets/images/og-image.jpg',
             'twitter:image':
-                'https://thumbs.dreamstime.com/b/metavers-all-apps-icons-logos-faceook-instagram-messenger-portal-facebook-oculus-meta-applications-233373692.jpg',
+                'https://raw.githubusercontent.com/josediaz214923-cyber/b-c-link-2026/refs/heads/master/src/assets/images/og-image.jpg',
             'og:image:type': 'image/jpeg',
             'og:image:alt': '',
         },
